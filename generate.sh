@@ -27,18 +27,18 @@ sed -i "s/\$DOMAINS/$NGINX_DOMAINS/g" /etc/nginx/nginx.conf
 echo "- start nginx"
 service nginx start
 
-# Run LetsEncrypt
-echo "- start letsencrypt"
-${LE_BIN} certonly --webroot -w /var/www/acme-certs ${LE_DOMAINS} --email ${EMAIL_ADDRESS} --agree-tos
+while [ : ]
+do
+    # Run LetsEncrypt
+    echo "- start letsencrypt"
+    ${LE_BIN} certonly --expand --non-interactive --preferred-challenges http --webroot -w /var/www/acme-certs ${LE_DOMAINS} --email ${EMAIL_ADDRESS} --agree-tos
 
-# Copy created certs
-if [ -d ${CERTIFICATES} ] ; then
-  echo "- copy certificates to /var/www/certs"
-  cp ${CERTIFICATES}/. /var/www/certs/ -R -L
-else
-  echo "- certificates folder $CERTIFICATES not found"
-fi
-
-# Stop nginx
-echo "- stop nginx"
-service nginx stop
+    # Copy created certs
+    if [ -d ${CERTIFICATES} ] ; then
+      echo "- copy certificates to /var/www/certs"
+      cp ${CERTIFICATES}/. /var/www/certs/ -R -L
+    else
+      echo "- certificates folder $CERTIFICATES not found"
+    fi
+    sleep 30d
+done

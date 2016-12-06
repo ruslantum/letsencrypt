@@ -30,6 +30,10 @@ EXPOSE 443
 # Volumes
 VOLUME /var/www/certs
 
+# forward request and error logs to docker log collector
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+	&& ln -sf /dev/stderr /var/log/nginx/error.log
+
 # Default command
 ADD ./generate.sh /generate.sh
 RUN chmod +x /generate.sh
