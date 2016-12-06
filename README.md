@@ -1,15 +1,12 @@
 # LetsEncrypt
 
-[![Docker Stars](https://img.shields.io/docker/stars/dockette/letsencrypt.svg?style=flat)](https://hub.docker.com/r/dockette/letsencrypt/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/dockette/letsencrypt.svg?style=flat)](https://hub.docker.com/r/dockette/letsencrypt/)
-
 Create 90 days SSL certificates for given domains.
 
 ## How it works
 
 Container creates simple Nginx server listening on port 80 and waiting for letsencrypt validation.
 
-It handles only requests to `mydomain.com/.well-known`, all other requests are forbidden. 
+It handles only requests to `mydomain.com/.well-known`, all other requests are redirected to HTTPS. 
 
 ```
 server {
@@ -21,7 +18,7 @@ server {
     }
 
     location / {
-        return 403;
+        return 301 https://$server_name$request_uri;
     }
 }
 ```
